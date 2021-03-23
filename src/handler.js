@@ -9,7 +9,7 @@ const $ = require('cheerio');
 async function configureBrowser(link){
   
   const browser = await puppeteer.launch({    
-    headless:true, 
+    headless:false, 
     ignoreHTTPSErrors: true,
     slowMo: 0,
     args : [      
@@ -111,17 +111,31 @@ async function handlerDeletePostingDate(page = new puppeteer.Page()) {
   console.log("Delete Success");  
 }
 
-async function handlerAddDateParameter(page = new puppeteer.Page(), startDate, endDate, rekening){
+async function handlerStartDate(page=new puppeteer.Page(), startDate){
   await page.evaluate(()=>document.body.innerHTML);    
   const date1 = await page.$("input[name='transferDateDisplay1']");
   await date1.focus();
   await date1.type(startDate, {delay:700});
+}
+
+async function handlerEndDate(page=new puppeteer.Page(), endDate){
+  await page.evaluate(()=>document.body.innerHTML);    
   const date2 = await page.$("input[name='transferDateDisplay2']");
   await date2.focus();
   await date2.type(endDate, {delay:700});
+}
+
+async function handlerRekening(page=new puppeteer.Page(), rekening){
+  await page.evaluate(()=>document.body.innerHTML);    
   const date3 = await page.$("input[name='accountDisplay']");
   await date3.focus();
   await date3.type(rekening, {delay:500});  
+}
+
+async function handlerAddDateParameter(page = new puppeteer.Page(), startDate, endDate, rekening){
+  await handlerStartDate(page, startDate);
+  await handlerEndDate(page, endDate);
+  await handlerRekening(page, rekening);
 }
 
 async function handlerClickShowData(page = new puppeteer.Page()){
