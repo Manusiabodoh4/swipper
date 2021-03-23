@@ -9,7 +9,7 @@ const $ = require('cheerio');
 async function configureBrowser(link){
   
   const browser = await puppeteer.launch({    
-    headless:false, 
+    headless:true, 
     ignoreHTTPSErrors: true,
     slowMo: 0,
     args : [      
