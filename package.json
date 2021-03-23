@@ -1,0 +1,22 @@
+{
+  "name": "swipper",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "repository": "https://github.com/Manusiabodoh4/swipper.git",
+  "author": "Reza Andriansyah <rezaxxxx02@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.5",
+    "cloudinary": "^1.25.1",
+    "prompt-sync": "^4.2.0",
+    "puppeteer": "^8.0.0",
+    "puppeteer-extra": "^3.1.18",
+    "puppeteer-extra-plugin-adblocker": "^2.11.11",
+    "puppeteer-extra-plugin-anonymize-ua": "^2.2.17",
+    "puppeteer-extra-plugin-recaptcha": "^3.3.7",
+    "puppeteer-extra-plugin-stealth": "^2.7.6"
+  }
+}
