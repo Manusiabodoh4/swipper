@@ -8,13 +8,11 @@ const schemaGET_BNI = joi.object({
     .alphanum()
     .required(),
   rekening : joi.string()
-    .alphanum()
-    .required(),
+    .alphanum(),    
   account : joi.number()
     .integer()
     .min(0)
-    .max(1)
-    .required()
+    .max(1)    
 });
 
 module.exports = {

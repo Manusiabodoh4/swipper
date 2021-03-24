@@ -7,10 +7,10 @@ const { registerCustomQueryHandler } = require('puppeteer');
 // const StealthPlugin = require('puppeteer-extra-plugin-stealth')
 // puppeteer.use(StealthPlugin())
 
-async function configureBrowser(link){
+async function configureBrowser(){
   
   const browser = await puppeteer.launch({    
-    headless:false, 
+    headless:true, 
     ignoreHTTPSErrors: true,
     slowMo: 0,
     args : [      
@@ -25,6 +25,12 @@ async function configureBrowser(link){
     ]
   });
   
+  return browser;
+
+}
+
+async function configurePage(browser = new puppeteer.Browser(), link){
+
   const page = await browser.newPage();
   
   await page.setBypassCSP(true);
@@ -212,5 +218,6 @@ module.exports = {
   handlerDeletePostingDate,
   handlerAddDateParameter,
   handlerClickShowData,
-  handlerGetDataMutasi
+  handlerGetDataMutasi,
+  configurePage
 }

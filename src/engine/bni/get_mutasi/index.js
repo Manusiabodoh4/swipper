@@ -12,7 +12,9 @@ async function init(startDate, endDate, rekening = "8070020005" , numberAccount=
 
   const chooseAccount = numberAccount;
   
-  const page = await Handler.configureBrowser(linkLogin);
+  const browser = await Handler.configureBrowser();
+
+  const page = await Handler.configurePage(browser, linkLogin);
 
   let status = new String();
 
@@ -67,6 +69,8 @@ async function init(startDate, endDate, rekening = "8070020005" , numberAccount=
   await page.goto(linkLogout, {waitUntil:"networkidle0"});
 
   console.log("Success Log-Out!");
+
+  await browser.close();
 
   return data;
   
