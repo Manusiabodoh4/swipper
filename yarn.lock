@@ -37,6 +37,18 @@
     "@types/firefox-webext-browser" "^82.0.0"
     tldts-experimental "^5.6.21"
 
+"@hapi/hoek@^9.0.0":
+  version "9.1.1"
+  resolved "https://registry.yarnpkg.com/@hapi/hoek/-/hoek-9.1.1.tgz#9daf5745156fd84b8e9889a2dc721f0c58e894aa"
+  integrity sha512-CAEbWH7OIur6jEOzaai83jq3FmKmv4PmX1JYfs9IrYcGEVI/lyL1EXJGCj7eFVJ0bg5QR8LMxBlEtA+xKiLpFw==
+
+"@hapi/topo@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@hapi/topo/-/topo-5.0.0.tgz#c19af8577fa393a06e9c77b60995af959be721e7"
+  integrity sha512-tFJlT47db0kMqVm3H4nQYgn6Pwg10GTZHb1pwmSiv1K4ks6drQOtfEF5ZnPjkvC+y4/bUPHK+bc87QvLcL+WMw==
+  dependencies:
+    "@hapi/hoek" "^9.0.0"
+
 "@remusao/guess-url-type@^1.1.2":
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/@remusao/guess-url-type/-/guess-url-type-1.2.1.tgz#b3e7c32abdf98d0fb4f93cc67cad580b5fe4ba57"
@@ -71,6 +83,23 @@
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/@remusao/trie/-/trie-1.4.1.tgz#755d09f8a007476334e611f42719b2d581f00720"
   integrity sha512-yvwa+aCyYI/UjeD39BnpMypG8N06l86wIDW1/PAc6ihBRnodIfZDwccxQN3n1t74wduzaz74m4ZMHZnB06567Q==
+
+"@sideway/address@^4.1.0":
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/@sideway/address/-/address-4.1.1.tgz#9e321e74310963fdf8eebfbee09c7bd69972de4d"
+  integrity sha512-+I5aaQr3m0OAmMr7RQ3fR9zx55sejEYR2BFJaxL+zT3VM2611X0SHvPWIbAUBZVTn/YzYKbV8gJ2oT/QELknfQ==
+  dependencies:
+    "@hapi/hoek" "^9.0.0"
+
+"@sideway/formula@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@sideway/formula/-/formula-3.0.0.tgz#fe158aee32e6bd5de85044be615bc08478a0a13c"
+  integrity sha512-vHe7wZ4NOXVfkoRb8T5otiENVlT7a3IAiw7H5M2+GO+9CDgcVUUsX1zalAztCmwyOr2RUTGJdgB+ZvSVqmdHmg==
+
+"@sideway/pinpoint@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@sideway/pinpoint/-/pinpoint-2.0.0.tgz#cff8ffadc372ad29fd3f78277aeb29e632cc70df"
+  integrity sha512-RNiOoTPkptFtSVzQevY/yWtZwf/RxyVnPy/OcA9HBM3MlGDnBEYL5B41H0MTn0Uec8Hi+2qUtTfG2WWZBmMejQ==
 
 "@types/chrome@0.0.91":
   version "0.0.91"
@@ -688,6 +717,17 @@ isobject@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/isobject/-/isobject-3.0.1.tgz#4e431e92b11a9731636aa1f9c8d1ccbcfdab78df"
   integrity sha1-TkMekrEalzFjaqH5yNHMvP2reN8=
+
+joi@^17.4.0:
+  version "17.4.0"
+  resolved "https://registry.yarnpkg.com/joi/-/joi-17.4.0.tgz#b5c2277c8519e016316e49ababd41a1908d9ef20"
+  integrity sha512-F4WiW2xaV6wc1jxete70Rw4V/VuMd6IN+a5ilZsxG4uYtUXWu2kq9W5P2dz30e7Gmw8RCbY/u/uk+dMPma9tAg==
+  dependencies:
+    "@hapi/hoek" "^9.0.0"
+    "@hapi/topo" "^5.0.0"
+    "@sideway/address" "^4.1.0"
+    "@sideway/formula" "^3.0.0"
+    "@sideway/pinpoint" "^2.0.0"
 
 jsonfile@^6.0.1:
   version "6.1.0"
