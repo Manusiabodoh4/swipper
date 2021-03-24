@@ -8,9 +8,9 @@ const linkLogin = "https://bnidirectng.bni.co.id/corp/common/login.do?action=log
 const linkMutasi = "https://bnidirectng.bni.co.id/corp/front/transactioninquiry.do?action=transactionByDateRequest&menuCode=MNU_GCME_040200";
 const linkLogout = "https://bnidirectng.bni.co.id/corp/common/login.do?action=logout";
 
-const chooseAccount = 0;
+async function init(startDate, endDate, rekening = "8070020005" , numberAccount=0){
 
-async function init(){
+  const chooseAccount = numberAccount;
   
   const page = await Handler.configureBrowser(linkLogin);
 
@@ -39,7 +39,7 @@ async function init(){
     console.log("Success Load Mutasi Page");
     
     await Handler.handlerDeletePostingDate(page);
-    await Handler.handlerAddDateParameter(page, "22032021", "22032021", "8070020005");
+    await Handler.handlerAddDateParameter(page, startDate, endDate, rekening);
 
     console.log("Success Add Parameter Date And Rekening");
 
@@ -72,6 +72,6 @@ async function init(){
   
 }
 
-init();
+module.exports = {init};
 
 

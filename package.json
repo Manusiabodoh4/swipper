@@ -6,11 +6,14 @@
   "author": "Reza Andriansyah <rezaxxxx02@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start-bni": "node src/bni/index.js"
+    "start-bni": "node src/bni/init.js",
+    "start": "node src/index.js"
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.5",
     "cloudinary": "^1.25.1",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
     "prompt-sync": "^4.2.0",
     "puppeteer": "^8.0.0",
     "puppeteer-extra": "^3.1.18",
