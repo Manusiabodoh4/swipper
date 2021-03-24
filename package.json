@@ -6,7 +6,7 @@
   "author": "Reza Andriansyah <rezaxxxx02@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "node src/index.js"
+    "start-bni": "node src/bni/index.js"
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.5",

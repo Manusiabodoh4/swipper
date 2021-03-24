@@ -1,5 +1,6 @@
 const puppeteer = require('puppeteer');
 const $ = require('cheerio');
+const { registerCustomQueryHandler } = require('puppeteer');
 
 // const puppeteer = require('puppeteer-extra')
 
@@ -30,7 +31,7 @@ async function configureBrowser(link){
 
   await page.setUserAgent("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36");  
 
-  await page.setDefaultNavigationTimeout( 90000 );
+  await page.setDefaultNavigationTimeout( 100000 );
 
   await page.setViewport( { 'width' : 1024, 'height' : 1024 } );
 
@@ -46,8 +47,6 @@ async function configureBrowser(link){
   });
   
   await page.goto(link, {waitUntil:"networkidle0"});  
-
-  //await page.waitForNavigation({waitUntil:"networkidle0"});
   
   return page;
   
@@ -58,9 +57,7 @@ async function getLinkLoginPage(page= new puppeteer.Page){
   const a = $("a", html)[1].attribs?.href;  
   await Promise.all([
     page.click("a[href='"+a+"']"),  
-    page.waitForNavigation({
-      waitUntil: 'networkidle2',
-    })
+    page.waitForNavigation()
   ]);
 }
 
@@ -111,25 +108,25 @@ async function handlerDeletePostingDate(page = new puppeteer.Page()) {
   console.log("Delete Success");  
 }
 
-async function handlerStartDate(page=new puppeteer.Page(), startDate){
-  await page.evaluate(()=>document.body.innerHTML);    
+async function handlerStartDate(page=new puppeteer.Page(), startDate){  
+  const html = await page.evaluate(()=>document.body.innerHTML);      
   const date1 = await page.$("input[name='transferDateDisplay1']");
   await date1.focus();
-  await date1.type(startDate, {delay:700});
+  await date1.type(startDate, {delay:500});
 }
 
 async function handlerEndDate(page=new puppeteer.Page(), endDate){
   await page.evaluate(()=>document.body.innerHTML);    
   const date2 = await page.$("input[name='transferDateDisplay2']");
   await date2.focus();
-  await date2.type(endDate, {delay:700});
+  await date2.type(endDate, {delay:500});
 }
 
 async function handlerRekening(page=new puppeteer.Page(), rekening){
   await page.evaluate(()=>document.body.innerHTML);    
   const date3 = await page.$("input[name='accountDisplay']");
   await date3.focus();
-  await date3.type(rekening, {delay:500});  
+  await date3.type(rekening, {delay:100});  
 }
 
 async function handlerAddDateParameter(page = new puppeteer.Page(), startDate, endDate, rekening){
@@ -141,18 +138,68 @@ async function handlerAddDateParameter(page = new puppeteer.Page(), startDate, e
 async function handlerClickShowData(page = new puppeteer.Page()){
   await page.evaluate(()=>document.body.innerHTML);    
   const btnShow = await page.$("input[name='show1'],input[type='button']");
-  console.log(btnShow);
-  // await Promise.all([
-  //   btnShow.click({clickCount:1}),  
-  //   page.waitForNavigation(), 
-  // ]);
+  await Promise.all([
+    btnShow.click({clickCount:1}),  
+    page.waitForNavigation(), 
+  ]);
 }
 
 async function handlerClickLogin(page = new puppeteer.Page()){    
   await Promise.all([
     page.click(`input[name='submit1']`, {clickCount:1}),  
-    page.waitForNavigation(), 
+    page.waitForNavigation({waitUntil:"networkidle0"}), 
   ]);
+}
+
+async function createObjectFromTable(element = new Element){    
+  const header = element.children[0];
+  const countHeader = header.children.length;
+  let itemHeader = new Array();  
+  for(let i=0;i<countHeader;i++){    
+    const tmpstr = new String(header.children[i].children[0].children[0]?.data);
+    const str = tmpstr.replace(" ","").replace(".", "").replace("/", "");
+    itemHeader.push(str);
+  }  
+  return itemHeader;
+}
+
+async function getDataFromDataTable(element = new Element, index = new Number){  
+  if(index < 1) return [];
+  const wrapData = element.children[index];
+  const countData = wrapData.children.length;  
+  let itemData = new Array();
+  for(let i=0;i<countData;i++){    
+    itemData.push(wrapData.children[i].children[0]?.data);
+  }
+  return itemData;
+}
+
+async function handlerGetDataMutasi(page=new puppeteer.Page()){
+  
+  const html = await page.evaluate(()=>document.body.innerHTML);
+  
+  const tbody = $('tbody', html)[2];
+  const countData = tbody.children.length;
+  
+  console.log(`Banyak Data : ${countData-1}`);
+
+  let result = new Array();
+
+  const itemHeader = await createObjectFromTable(tbody);  
+
+  for(let i=1;i<countData;i++){
+    const itemData = await getDataFromDataTable(tbody, i);
+    let obj = {};
+    for(let j=0;j<itemHeader.length;j++){      
+      obj[itemHeader[j]] = itemData[j];
+    }
+    result.push(obj);
+  }
+
+  console.log(result);
+
+  return result;
+
 }
 
 module.exports = {
@@ -164,5 +211,6 @@ module.exports = {
   handlerInputUserID ,
   handlerDeletePostingDate,
   handlerAddDateParameter,
-  handlerClickShowData
+  handlerClickShowData,
+  handlerGetDataMutasi
 }
