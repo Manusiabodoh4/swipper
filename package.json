@@ -6,13 +6,20 @@
   "author": "Reza Andriansyah <rezaxxxx02@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start-bni": "node src/bni/get_mutasi/init.js",
-    "start": "node src/index.js"
+    "start-bni": "node src/engine/bni/get_mutasi/init.js",
+    "start-mandiri": "node src/engine/mandiri/get_mutasi/init.js",
+    "start-permata": "node src/engine/permata/get_mutasi/init.js",
+    "start-bri": "node src/engine/bri/get_mutasi/init.js",
+    "dev": "node src/index.js",
+    "start": "node app.js",
+    "build": "node build.js"
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.5",
     "cloudinary": "^1.25.1",
     "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "esbuild": "^0.9.7",
     "express": "^4.17.1",
     "joi": "^17.4.0",
     "prompt-sync": "^4.2.0",

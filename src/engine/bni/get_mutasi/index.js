@@ -1,77 +1,143 @@
-const Handler = require("./helper/handler");
+const Handler = require("./controller/handler");
 
-const companyID = "SYARIAHKOIN";
+const env = require("../../../env");
+const { account } = require("../../../config");
 
-const account = [{userid: "SYKOINDO1",password : "Rahasia99"},{userid : "SYKOINDO2",password : "aLIFAH20"}]
+const linkLogin = env.LINK_LOGIN;
+const linkMutasi = env.LINK_MUTASI;
+const linkLogout = env.LINK_LOGOUT;
 
-const linkLogin = "https://bnidirectng.bni.co.id/corp/common/login.do?action=loginRequest"
-const linkMutasi = "https://bnidirectng.bni.co.id/corp/front/transactioninquiry.do?action=transactionByDateRequest&menuCode=MNU_GCME_040200";
-const linkLogout = "https://bnidirectng.bni.co.id/corp/common/login.do?action=logout";
+async function logout(browser,page){
+  await page.goto(linkLogout, {waitUntil:"networkidle0", timeout:0});
+  await browser.close();  
+  if (browser && browser.process() != null) browser.process().kill('SIGINT');  
+  console.log("Logout!");  
+}
 
-async function init(startDate, endDate, rekening = "8070020005" , numberAccount=0){
-
-  const chooseAccount = numberAccount;
+async function init(startDate, endDate, numberAccount=0){
   
-  const browser = await Handler.configureBrowser();
-
-  const page = await Handler.configurePage(browser, linkLogin);
-
-  let status = new String();
-
   let data = [];
 
+  const chooseAccount = numberAccount;  
+
+  let browser;
+
+  console.log("Running");
+
   try {
+    browser = await Handler.configureBrowser();    
+  } catch (error) {
+    console.log("Terjadi kesalahan pada Configure Browser!");    
+    return data;
+  }  
 
-    console.log("Finish Load Login");
-      
-    await Handler.handlerInputCompanyID(page, companyID);
-    await Handler.handlerInputUserID(page, account[chooseAccount].userid);
-    await Handler.handlerInputPassword(page, account[chooseAccount].password); 
+  let page;
+
+  try{
+    page = await Handler.configurePage(browser, linkLogin);  
+  }catch(error){
+    console.log("Terjadi kesalahan pada Configure Page");    
+    return data;
+  }  
+
+  console.log("Berhasil Load Login Page BNI " + linkLogin);  
+
+  try {
+    await Handler.handlerInputCompanyID(page, account[chooseAccount].companyId);
+    await Handler.handlerInputUserID(page, account[chooseAccount].userId);
+    await Handler.handlerInputPassword(page, account[chooseAccount].password);     
+  } catch (error) {
+    console.log("Terjadi kesalahan pada Handler Input CompanyID, UserID, Password");
+    await logout(browser, page);    
     
-    console.log("Finish Input CompanyID, UserID, Password");
-
-    await Handler.handlerClickLogin(page);  
-    
-    console.log("Success Load Home Page");  
-    
-    await page.waitForTimeout(1000);
-
-    await page.goto(linkMutasi, {waitUntil:"networkidle2"});  
-
-    console.log("Success Load Mutasi Page");
-    
-    await Handler.handlerDeletePostingDate(page);
-    await Handler.handlerAddDateParameter(page, startDate, endDate, rekening);
-
-    console.log("Success Add Parameter Date And Rekening");
-
-    await Handler.handlerClickShowData(page);  
-
-    console.log("Success Load Table Data Mutasi!");
-
-    await page.waitForTimeout(5000);
-
-    console.log("TRY GET DATA");
-
-    try {
-      data = await Handler.handlerGetDataMutasi(page);          
-    } catch (error) {
-      status = "Data Kosong";
-    } 
-    
-  } catch (error) {    
-    console.log(error);
+    return data;
   }
 
-  console.log(status);
+  console.log(`Berhasil input CompanyID = ${account[chooseAccount].companyId}, UserID = ${account[chooseAccount].userId}, Password = ${account[chooseAccount].password}`);
 
-  await page.waitForTimeout(10000);
-  await page.goto(linkLogout, {waitUntil:"networkidle0"});
+  try {    
+    await Handler.handlerClickLogin(page);  
+    console.log("Menuju Dashboard..");
+  } catch (error) {
+    console.log("Terjadi kesalahan pada Handler Click Login");
+    await logout(browser, page);    
+    
+    return data;
+  }
+  
+  console.log("Berhasil masuk kedalam Dashboard!");    
 
-  console.log("Success Log-Out!");
+  console.log("Pending..");
 
-  await browser.close();
+  await page.waitForTimeout(5000);
 
+  try {
+    console.log("Persiapan masuk kedalam page Mutasi");
+    await page.goto(linkMutasi, {waitUntil:"networkidle0", timeout:0});  
+  } catch (error) {
+    console.log("Terjadi kesalahan pada Proses Redirect menuju Mutasi Page!");
+    await logout(browser, page);    
+    
+    return data;
+  }
+
+  console.log("Berhasil masuk kedalam Page Mutasi!");
+
+  await page.waitForTimeout(7000);
+
+  try {
+    await Handler.handlerDeletePostingDate(page);
+  } catch (error) {
+    console.log("Terjadi Kesalahan ketika delete Parameter");
+    console.log("Kenaaa Session!!");
+    await logout(browser, page);    
+    
+    return data;
+  }
+
+  console.log("Berhasil menghapus parameter tanggal pada Page Mutasi");
+
+  try {
+    await Handler.handlerAddDateParameter(page, startDate, endDate, account[chooseAccount].rekening);
+  } catch (error) {
+    console.log("Terjadi Kesalahan Ketika Add Parameter Date And Rekening");
+    await logout(browser, page);    
+    
+    return data;
+  }
+
+  console.log("Berhasil Memasukan Parameter yang dibutuhkan.");
+
+  try {
+    await Handler.handlerClickShowData(page);
+  } catch (error) {
+    console.log('Terjadi kesalahan pada Handler Click Show Data');
+    await logout(browser, page);    
+    
+    return data;
+  }  
+  
+  console.log("Berhasil Masuk pada Page Mutasi");
+
+  await page.waitForTimeout(5000);
+
+  try {
+    console.log("Mencoba mengambil data pada Page Mutasi!");
+    data = await Handler.handlerGetDataMutasi(page);
+  } catch (error) {
+    console.log("Terjadi kesalahan pada Handler Get Data Mutasi");
+    console.log("Data Kosong");
+    await logout(browser, page);  
+    
+    return data;
+  }
+
+  await page.waitForTimeout(5000);
+
+  logout(browser, page); 
+
+  
+  
   return data;
   
 }

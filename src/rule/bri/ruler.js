@@ -1,11 +1,9 @@
 const joi = require('joi');
 
-const schemaGET_BNI = joi.object({
-  startDate : joi.string()
-    .alphanum()
+const schemaGET_BRI = joi.object({
+  startDate : joi.string()    
     .required(),
-  endDate : joi.string()
-    .alphanum()
+  endDate : joi.string()    
     .required(),  
   account : joi.number()
     .integer()
@@ -13,5 +11,5 @@ const schemaGET_BNI = joi.object({
 });
 
 module.exports = {
-  schemaGET_BNI
+  schemaGET_BRI
 }
